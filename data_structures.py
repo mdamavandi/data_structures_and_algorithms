@@ -62,6 +62,31 @@ class ChainingHashTable:
         if key in bucket_list:
             bucket_list.remove(key)
 
+class EmptyBucket:
+    """
+    class to represent empty bucket
+    """
+    pass
+
+class LinearProbingHashTable:
+    """
+    HashTable class definition using linear probing
+    """
+    def __init__(self, initial_capacity=10):
+        """
+        constructor with optional initial capacity
+        all buckets are assigned with an EmptyBucket() instance called self.EMPTY_SINCE_START
+        :param initial_capacity: size of hash table
+        """
+
+        # special constants to be used as the two types of empty buckets
+        self.EMPTY_SINCE_START = EmptyBucket()
+        self.EMPTY_AFTER_REMOVAL = EmptyBucket()
+
+        # initialize all the table buckets to be EMPTY_SINCE_START
+        self.table = [self.EMPTY_SINCE_START] * initial_capacity
+
+
 if __name__ == '__main__':
     # Main program to create a couple of HashTable objects, showing how
     # the 'capacity' constructor argument works.
