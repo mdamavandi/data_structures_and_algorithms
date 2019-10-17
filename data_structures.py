@@ -157,6 +157,55 @@ class LinearProbingHashTable:
         # the entire table was probed or an EMPTY_SINCE_START bucket was found
         return None
 
+class DoubleHashingHashTable:
+    """
+    hash table definition using double hashing
+    """
+    def __init__(self, initial_capacity=11):
+        """
+        constructor with optional initial capacity
+        table size should always be a prime number so if the second hash returns 0,
+        then all buckets will be guaranteed to be probed before the loop ends
+        :param initial_capacity: prime number
+        """
+
+        # special constants to be used as the two types of empty cells
+        self.EMPTY_SINCE_START = EmptyBucket()
+        self.EMPTY_AFTER_REMOVAL = EmptyBucket()
+
+        # initialize all the table cells to be EMPTY_SINCE_START
+        self.table = [self.EMPTY_SINCE_START] * initial_capacity
+
+    def h2(self, item):
+        """
+        secondary hash function
+        many different functions can be used here
+        the function used here is a common one, with different (usually prime number) constants used instead of 7
+        :param item: item to be hashed
+        :return: integer hash result
+        """
+        return 7 - hash(item) % 7
+
+    def insert(self, item):
+        """
+        inserts a new item into the hash table
+        :param item: item to be inserted
+        :return: boolean
+        """
+        for i in range(len(self.table)):
+            # calculate bucket index for the item for this value of i
+            # hash() is used as the h2 hashing function
+            bucket = (hash(item) + self.h2(item) * i) % len(self.table)
+            if type(self.table[bucket]) is EmptyBucket:
+                self.table[bucket] = item
+                return True
+
+        # the entire table was full and the key could not be inserted
+        return False
+
+
+
+
 if __name__ == '__main__':
     # Main program to create a couple of HashTable objects
     ht1 = ChainingHashTable()
@@ -185,3 +234,10 @@ if __name__ == '__main__':
     ht3.remove('bar')
 
     print(f'ht3: {ht3.table}')
+
+    ht4 = DoubleHashingHashTable(3)
+    ht4.insert(5)
+    ht4.insert('car')
+    ht4.insert('road')
+
+    print(f'ht4: {ht4.table}')
