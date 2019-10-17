@@ -4,6 +4,18 @@ class ChainingHashTable:
     """
     hash table data structure using chaining
     """
+    def __str__(self):
+        # pretty printing for ChainingHashTable
+        # can be implemented using recursion?
+        table_as_string = '\n[\n'
+        for i, elem in enumerate(self.table):
+            if i + 1 != len(self.table):
+                table_as_string += f'\t[{elem}],\n'
+            else:
+                table_as_string += f'\t[{elem}]\n'
+        table_as_string += ']'
+        return table_as_string
+
     def __init__(self, initial_capacity=10):
         """
         constructor with optional initial capacity parameter
@@ -72,6 +84,17 @@ class LinearProbingHashTable:
     """
     HashTable class definition using linear probing
     """
+    def __str__(self):
+        # pretty printing for LinearProbingHashTable
+        table_as_string = '\n[\n'
+        for i, elem in enumerate(self.table):
+            if i+1 != len(self.table):
+                table_as_string += f'\t[{elem}],\n'
+            else:
+                table_as_string += f'\t[{elem}]\n'
+        table_as_string += ']'
+        return table_as_string
+
     def __init__(self, initial_capacity=10):
         """
         constructor with optional initial capacity
@@ -161,6 +184,17 @@ class DoubleHashingHashTable:
     """
     hash table definition using double hashing
     """
+    def __str__(self):
+        # pretty printing for DoubleHashingTable
+        table_as_string = '\n[\n'
+        for i, elem in enumerate(self.table):
+            if i+1 != len(self.table):
+                table_as_string += f'\t[{elem}],\n'
+            else:
+                table_as_string += f'\t[{elem}]\n'
+        table_as_string += ']'
+        return table_as_string
+
     def __init__(self, initial_capacity=11):
         """
         constructor with optional initial capacity
@@ -203,29 +237,61 @@ class DoubleHashingHashTable:
         # the entire table was full and the key could not be inserted
         return False
 
+    def search(self, key):
+        """
+        searches for an item with a matching key in the hash table
+        returns the item if found, or None if not found
+        :param key: item to be searched for
+        :return: item if found, None if not found
+        """
+        for i in range(len(self.table)):
+            # calculate bucket index for the item for this value of i
+            # hash() is used as the h1 hashing function
+            bucket = (hash(key) + self.h2(key) * i) % len(self.table)
 
+            # if we found the item, return it
+            if self.table[bucket] == key:
+                return self.table[bucket]
+
+        # the entire table was full and the key was not found
+        return None
+
+    def remove(self, key):
+        """
+        removes an item with a matching key from the hash table if found
+        :param key: item to be removed
+        :return: None
+        """
+        for i in range(len(self.table)):
+            # calculate bucket index for the item for this value of i
+            # hash() is used as the h1 hashing function
+            bucket = (hash(key) + self.h2(key) * i) % len(self.table)
+
+            # if the item is found, remove it by setting the bucket to EMPTY_AFTER_REMOVAL
+            if self.table[bucket] == key:
+                self.table[bucket] = self.EMPTY_AFTER_REMOVAL
 
 
 if __name__ == '__main__':
     # Main program to create a couple of HashTable objects
     ht1 = ChainingHashTable()
-    print(f'ht1: {ht1.table}')
+    print(f'ht1: {ht1}')
 
     ht1.insert(10)
     ht1.insert('car')
     ht1.insert(5.2)
     ht1.remove(5.2)
 
-    print(f'ht1: {ht1.table}')
+    print(f'ht1: {ht1}')
 
     ht2 = ChainingHashTable(5)
-    print(f'ht2: {ht2.table}')
+    print(f'ht2: {ht2}')
 
     ht2.insert(10)
     ht2.insert('car')
     ht2.insert(5.2)
 
-    print(f'ht2: {ht2.table}')
+    print(f'ht2: {ht2}')
 
     ht3 = LinearProbingHashTable()
     ht3.insert('foo')
@@ -233,11 +299,16 @@ if __name__ == '__main__':
     print(ht3.search('bar'))
     ht3.remove('bar')
 
-    print(f'ht3: {ht3.table}')
+    print(f'ht3: {ht3}')
 
     ht4 = DoubleHashingHashTable(3)
     ht4.insert(5)
     ht4.insert('car')
     ht4.insert('road')
 
-    print(f'ht4: {ht4.table}')
+    print(f'ht4: {ht4}')
+
+    print(ht4.search('street'))
+    ht4.remove('car')
+
+    print(f'ht4: {ht4}')
