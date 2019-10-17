@@ -86,10 +86,32 @@ class LinearProbingHashTable:
         # initialize all the table buckets to be EMPTY_SINCE_START
         self.table = [self.EMPTY_SINCE_START] * initial_capacity
 
+    def insert(self, item):
+        """
+        inserts a new item into the hash table
+        :param item: item to be inserted
+        :return: boolean
+        """
 
+        # find initial bucket we would like to insert the item into
+        bucket = hash(item) % len(self.table)
+        buckets_probed = 0
+
+        # start linearly probing the buckets
+        while buckets_probed < len(self.table):
+            # if the bucket is empty, the item can be inserted at that index
+            if type(self.table[bucket]) is EmptyBucket:
+                self.table[bucket] = item
+                return True
+
+            # the bucket was occupied, continue probing to next index in the table
+            bucket = (bucket + 1) % len(self.table)
+            buckets_probed += 1
+
+        # the entire table was full and the key could not be inserted
+        return False
 if __name__ == '__main__':
-    # Main program to create a couple of HashTable objects, showing how
-    # the 'capacity' constructor argument works.
+    # Main program to create a couple of HashTable objects
     ht1 = ChainingHashTable()
     print('ht1:', ht1.table)
 
@@ -108,3 +130,9 @@ if __name__ == '__main__':
     ht2.insert(5.2)
 
     print('ht2:', ht2.table)
+
+    ht3 = LinearProbingHashTable()
+    ht3.insert('foo')
+    ht3.insert('bar')
+
+    print('ht3:', ht3.table)
