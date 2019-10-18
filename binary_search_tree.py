@@ -72,6 +72,70 @@ class BinarySearchTree:
                     else:
                         current_node = current_node.right
 
+    def remove(self, key):
+        """
+        removes a node with a given key (if it is in the BST)
+        :param key: key of Node to be removed
+        :return: None
+        """
+        parent = None
+        current_node = self.root
+
+        # search for the node
+        while current_node is not None:
+
+            # check if current_node has a matching key
+            if current_node.key == key:
+                # case 1
+                if current_node.left is None and current_node.right is None:
+                    if parent is None: # Node is root
+                        self.root = None
+                    elif parent.left is current_node:
+                        parent.left = None
+                    else:
+                        parent.right = None
+                    return # Node found and removed
+                # case 2a
+                elif current_node.left is not None and current_node.right is None:
+                    if parent is None: # Node is root
+                        self.root = current_node.left
+                    elif parent.left is current_node:
+                        parent.left = current_node.left
+                    else:
+                        parent.right = current_node.left
+                    return # Node found and removed
+                # case 2b
+                elif current_node.left is none and current_node.right is not None:
+                    if parent is None: # Node is root
+                        self.root = current_node.right
+                    elif parent.left is current_node:
+                        parent.left = current_node.right
+                    else:
+                        parent.right = current_node.right
+                    return # Node found and removed
+                # case 3
+                else:
+                    # find successor (leftmost child of right subtree)
+                    successor = current_node.right
+                    while successor.left is not None:
+                        successor = successor.left
+                    # copy successor to current node
+                    current_node.key = successor.key
+                    parent = current_node
+                    # remove successor from right subtree
+                    current_node = current_node.right
+                    # loop continues with new key
+                    key = parent.key
+            elif current_node.key < key: # search right
+                parent = current_node
+                current_node = current_node.right
+            else: # search left
+                parent = current_node
+                current_node = current_node.left
+
+        # the node to be removed was not found
+        return
+
 if __name__ == '__main__':
     tree = BinarySearchTree()
     node_a = Node(17)
@@ -99,3 +163,11 @@ if __name__ == '__main__':
         print(f'Found node with key = {found_node.key}.')
     else:
         print('Key 99 not found.')
+
+    # test remove method
+    tree.remove(3)
+    found_node = tree.search(3)
+    if found_node is not None:
+        print(f'Found node with key = {found_node.key}.')
+    else:
+        print('Key 3 not found.')
