@@ -87,7 +87,7 @@ class MaxHeap:
 
         # move the last item in the array into index 0
         replace_value = self.heap_array.pop()
-        if len(self.heap_array) > 0
+        if len(self.heap_array) > 0:
             self.heap_array[0] = replace_value
 
             # percolate down to restore max heap property
@@ -95,3 +95,13 @@ class MaxHeap:
 
         # return the max value
         return max_value
+
+if __name__ == '__main__':
+    h = MaxHeap()
+    input_list = [10, 2, 5, 18, 22]
+    for item in input_list:
+        h.insert(item)
+        print(f'   --> array: {h.heap_array}\n')
+    while len(h.heap_array) > 0:
+        removed_value = h.remove()
+        print(f'   --> removed {removed_value}, array: {h.heap_array}\n')
