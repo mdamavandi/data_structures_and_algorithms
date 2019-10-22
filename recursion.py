@@ -56,6 +56,12 @@ def fibonacci(v1, v2, run_cnt):
     :param run_cnt: number of steps to take
     :return:
     """
+    print(f'{v1} + {v2} = {v1+v2}')
+
+    if run_cnt <= 1: # base case, ran for user's number of steps
+        pass # do nothing
+    else: # recursive case
+        fibonacci(v2, v2+v1, run_cnt-1)
 
 if __name__ == '__main__':
     print('Choose a number from 0 to 100.')
@@ -81,3 +87,11 @@ if __name__ == '__main__':
         print(f'Found at position {pos}.')
     else:
         print('Not found.')
+
+    print('This program outputs the \n'
+          'Fibonacci sequence step-by-step,\n'
+          'starting after the first 0 and 1.\n')
+
+    run_for = int(input('How many steps would you like? '))
+
+    fibonacci(0, 1, run_for)
