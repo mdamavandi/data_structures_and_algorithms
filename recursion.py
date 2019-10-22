@@ -63,6 +63,51 @@ def fibonacci(v1, v2, run_cnt):
     else: # recursive case
         fibonacci(v2, v2+v1, run_cnt-1)
 
+def gcd(n1, n2):
+    """
+    determines the greatest common divisor of two numbers,
+    e.g. GCD(8, 12) = 4
+    :param n1: first number
+    :param n2: second number
+    :return: greatest common divisor of n1 and n2
+    """
+    greatest_common_divisor = 0
+
+    if n1 == n2: # base case, numbers are equal
+        greatest_common_divisor = n1
+    else: # recursive case, try again after subtracting the smaller number from the larger number
+        if n1 > n2: # n2 is smaller
+            greatest_common_divisor = gcd(n1 - n2, n2)
+        else: # n1 is smaller
+            greatest_common_divisor = gcd(n1, n2 - n1)
+
+    return greatest_common_divisor
+
+def scramble(r_letters, s_letters):
+    """
+    output every possible combination of a word
+    each recursive call moves a letter from
+    r_letters (remaining letters) to
+    s_letters (scrambled letters)
+    :param r_letters: remaining letters
+    :param s_letters: scrambled letters
+    :return:
+    """
+    if len(r_letters) == 0: # base case, all letters used
+        print(s_letters)
+    else: # recursive case
+        # for each call to scramble() move a letter from remaining to scrambled
+        for i in range(len(r_letters)):
+            # the letter at index i will be scrambled
+            scramble_letter = r_letters[i]
+
+            # remove letter to scramble from remaining letters list
+
+            remaining_letters = r_letters[:i] + r_letters[i+1:]
+
+            # scramble letter
+            scramble(remaining_letters, s_letters + scramble_letter)
+
 if __name__ == '__main__':
     print('Choose a number from 0 to 100.')
     print('Answer with:')
@@ -95,3 +140,19 @@ if __name__ == '__main__':
     run_for = int(input('How many steps would you like? '))
 
     fibonacci(0, 1, run_for)
+
+    print('This program outputs the greatest\n'
+          'common divisor of two numbers.\n')
+
+    num1 = int(input('Enter first number: '))
+    num2 = int(input('Enter second number: '))
+
+    if (num1 < 1) or (num2 < 1):
+        print('Note: neither value can be below 1')
+    else:
+        my_gcd = gcd(num1, num2)
+        print(f'Greatest common divisor = {my_gcd}.')
+
+    word = input('Enter a word to be scrambled: ')
+    scramble(word, '')
+
