@@ -19,6 +19,7 @@ def selection_sort(numbers):
         # swap numbers[i] and numbers[index_smallest]
         numbers[i], numbers[index_smallest] = numbers[index_smallest], numbers[i]
 
+
 def insertion_sort(numbers):
     """
     sorts the provided list in place
@@ -35,6 +36,7 @@ def insertion_sort(numbers):
             numbers[j], numbers[j-1] = numbers[j-1], numbers[j]
             j -= 1
 
+
 def insertion_sort_interleaved(numbers, start_index, gap):
     """
     partially sorts the provided list in place, used in shell_sort()
@@ -50,6 +52,7 @@ def insertion_sort_interleaved(numbers, start_index, gap):
             numbers[j], numbers[j-gap] = numbers[j-gap], numbers[j]
             j -= gap
 
+
 def shell_sort(numbers, gap_values):
     """
     sorts provided list in place
@@ -60,6 +63,7 @@ def shell_sort(numbers, gap_values):
     for gap_value in gap_values:
         for i in range(gap_value):
             insertion_sort_interleaved(numbers, i, gap_value)
+
 
 def partition(numbers, start_index, end_index):
     """
@@ -101,6 +105,7 @@ def partition(numbers, start_index, end_index):
     # 'high' is the last index in the left segment
     return high
 
+
 def quicksort(numbers, start_index, end_index):
     """
     uses recursion to sort the two parts of the list
@@ -121,6 +126,7 @@ def quicksort(numbers, start_index, end_index):
 
     # recursively sort the right segment
     quicksort(numbers, high+1, end_index)
+
 
 def merge(numbers, i, j, k):
     """
@@ -185,6 +191,75 @@ def merge_sort(numbers, i, k):
 
         # merge left and right partition in sorted order
         merge(numbers, i, j, k)
+
+
+def radix_get_max_length(numbers):
+    """
+    returns the maximum length, in numbers of digits, out of all list elements
+    :param numbers: list to be sorted
+    :return: max digits
+    """
+    max_digits = 0
+    for num in numbers:
+        digit_count = radix_get_length(num)
+        if digit_count > max_digits:
+            max_digits = digit_count
+    return max_digits
+
+
+def radix_get_length(value):
+    """
+    returns the length, in number of digits of value
+    :param value: integer
+    :return: length of integer
+    """
+    if value == 0:
+        return 1
+
+    digits = 0
+    while value != 0:
+        digits += 1
+        value = value // 10
+    return digits
+
+
+def radix_sort(numbers):
+    """
+    sorts a list of integers by grouping elements based on the elements digits
+    :param numbers: list to be sorted
+    :return: None
+    """
+    buckets = []
+    for i in range(10):
+        buckets.append([])
+
+    # find the max length, in number of digits
+    max_digits = radix_get_max_length(numbers)
+
+    pow_10 = 1
+    for digit_index in range(max_digits):
+        for num in numbers:
+            bucket_index = (num // pow_10) % 10
+            buckets[bucket_index].append(num)
+
+        numbers.clear()
+        for bucket in buckets:
+            numbers.extend(bucket)
+            bucket.clear()
+
+        pow_10 = pow_10 * 10
+
+    negatives = []
+    non_negatives = []
+    for num in numbers:
+        if num < 0:
+            negatives.append(num)
+        else:
+            non_negatives.append(num)
+    negatives.reverse()
+    numbers.clear()
+    numbers.extend(negatives + non_negatives)
+
 
 if __name__ == '__main__':
     numbers = [
@@ -268,3 +343,20 @@ if __name__ == '__main__':
 
     merge_sort(numbers, 0, len(numbers)-1)
     print(f'MERGE SORTED: {numbers}')
+
+    numbers = [
+        61,
+        76,
+        19,
+        4,
+        94,
+        32,
+        27,
+        83,
+        58,
+    ]
+
+    print(f'UNSORTED: {numbers}')
+
+    radix_sort(numbers)
+    print(f'RADIX SORTED: {numbers}')
