@@ -122,6 +122,70 @@ def quicksort(numbers, start_index, end_index):
     # recursively sort the right segment
     quicksort(numbers, high+1, end_index)
 
+def merge(numbers, i, j, k):
+    """
+    divides list into two halves, recursively sorts each half,
+    then merges sorted halves to produce a sorted list
+    :param numbers: list of numbers containing 2 sorted partitions to merge
+    :param i: start index of first sorted partition
+    :param j: end index of first sorted partition
+    :param k: end index of second sorted partition
+    :return:
+    """
+    merged_size = k - i + 1 # size of merged partition
+    merged_numbers = [0] * merged_size # dynamically allocates temporary array for merged numbers
+
+    merge_pos = 0 # position to insert merged number
+    left_pos = i # initialize left partition position
+    right_pos = j + 1 # initialize right partition position
+
+    # ad smallest element from left or right partition to merged numbers
+    while left_pos <= j and right_pos <= k:
+        if numbers[left_pos] <= numbers[right_pos]:
+            merged_numbers[merge_pos] = numbers[left_pos]
+            left_pos += 1
+        else:
+            merged_numbers[merge_pos] = numbers[right_pos]
+            right_pos += 1
+        merge_pos = merge_pos + 1
+
+        # if left partition is not empty, add remaining elements to merged numbers
+        while left_pos <= j:
+            merged_numbers[merge_pos] = numbers[left_pos]
+            left_pos += 1
+            merge_pos += 1
+
+        # if right partition is not empty, add remaining elements to merged numbers
+        while right_pos <= k:
+            merged_numbers[merge_pos] = numbers[right_pos]
+            right_pos += 1
+            merge_pos += 1
+
+        # copy merge number back to numbers
+        for merge_pos in range(merged_size):
+            numbers[i+merge_pos] = merged_numbers[merge_pos]
+
+
+def merge_sort(numbers, i, k):
+    """
+    recursively sorts a partition of a greater list
+    :param numbers: list with partition to sort
+    :param i: start index of partition to sort
+    :param k: end index of partition to sort
+    :return:
+    """
+    j = 0
+
+    if i < k:
+        j = (i + k) // 2 # find the midpoint in the partition
+
+        # recursively sort left and right partitions
+        merge_sort(numbers, i, j)
+        merge_sort(numbers, j+1, k)
+
+        # merge left and right partition in sorted order
+        merge(numbers, i, j, k)
+
 if __name__ == '__main__':
     numbers = [
         10,
@@ -187,3 +251,20 @@ if __name__ == '__main__':
 
     quicksort(numbers, 0, len(numbers)-1)
     print(f'QUICKSORTED: {numbers}')
+
+    numbers = [
+        61,
+        76,
+        19,
+        4,
+        94,
+        32,
+        27,
+        83,
+        58,
+    ]
+
+    print(f'UNSORTED: {numbers}')
+
+    merge_sort(numbers, 0, len(numbers)-1)
+    print(f'MERGE SORTED: {numbers}')
